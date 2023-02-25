@@ -101,6 +101,7 @@ const deal = (e: any) => {
     cardDataList.value.forEach((item) => {
       if (item.position.top !== 10) {
         item.position = { left: 100, top: 10, width: '100%', height: '100%' }
+        item.status = 2
       }
     })
     cardDataList.value.sort(() => { return Math.random() > 0.5 ? -1 : 1 })
@@ -118,9 +119,12 @@ const deal = (e: any) => {
   console.log(count.value);
 
   cardDataList.value.forEach((item, index: number) => {
+
     if (index < count.value * 5 && index >= (count.value - 1) * 5) {
       item.status = 1
       item.position = positionList[index % 5]
+      console.log(item);
+
     }
     if (count.value > 10) {
       count.value = 0
@@ -130,12 +134,12 @@ const deal = (e: any) => {
 </script>
 
 <template>
-                <div>
-                  <div>{{ cardNum }}</div>
-            <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
-          </div>
-          <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
-          <button @click="deal($event)">发牌</button>
+    <div>
+      <div>{{ cardNum }}</div>
+      <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
+    </div>
+    <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
+    <button @click="deal($event)">发牌</button>
 </template>
 
 <style scoped>
