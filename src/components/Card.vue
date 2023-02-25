@@ -28,10 +28,15 @@ const img = {
 watch(
     props.value,
     (newValue, oldValue) => {
-        console.log(newValue);
-        console.log(valuePreview);
-
-        nextTick(() => { showInfo(newValue) })
+        if (props.value.position) {
+            if (props.value.position.left) {
+                card.value.style.left = `${props.value.position.left}px`;
+            }
+            if (props.value.position.top) {
+                card.value.style.top = `${props.value.position.top}px`;
+            }
+        }
+        showInfo(props.value); 1
     },
     { deep: true }
 )
@@ -118,5 +123,6 @@ const draw = () => {
     position: fixed;
     top: 10px;
     z-index: 2;
+    transition: left 2s,top 2s;
 }
 </style>

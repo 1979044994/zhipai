@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Card from './Card.vue';
 import CardBox from './CardBox.vue';
 export interface cardInfo {
@@ -20,6 +20,7 @@ let winWidth = window.document.body.offsetWidth
 let winHeight = window.document.body.offsetHeight
 const containerList = new Map()
 const cardPoolList = reactive<any>({})
+const countCard = ref(52)
 const cardDataList = ref<Array<cardInfo>>([])
 let changeCardDataList = reactive<Array<cardInfo>>([])
 const positionList = reactive<Array<Position>>([])
@@ -41,12 +42,25 @@ const generateCardData = () => {
       //四色
       type = i % 4;
       let cardData = { type, num: j + 1, position: { left: 100, top: 10, width: '100%', height: '100%' }, status: 2 };
-      cardDataList.value.push(cardData);
+      cardDataList.value = [...cardDataList.value, cardData]
+      // cardDataList.value.push(cardData);
     }
   }
   //乱序 -- 将牌打乱
   cardDataList.value.sort(() => { return Math.random() > 0.5 ? -1 : 1 })
 }
+const cardNum = computed(() => {
+  let count = 0
+  cardDataList.value.forEach((item) => {
+    if (item.position.top === 10) {
+      count = count + 1
+    }
+  })
+  return count
+
+})
+
+
 const generateId = () => {
   return `${new Date().getTime()}&${Math.random()}`
 }
@@ -83,6 +97,15 @@ generPosition()
 const deal = (e: any) => {
 
   count.value += 1
+  if (cardNum.value < 5) {
+    cardDataList.value.forEach((item) => {
+      if (item.position.top !== 10) {
+        item.position = { left: 100, top: 10, width: '100%', height: '100%' }
+      }
+    })
+    cardDataList.value.sort(() => { return Math.random() > 0.5 ? -1 : 1 })
+    console.log(cardDataList.value);
+  }
   // const dataList = cardDataList.filter((item, index) => {
   //   if (index < count.value * 5 && index >= (count.value - 1) * 5) {
   //     item.status = 1
@@ -92,20 +115,23 @@ const deal = (e: any) => {
   // })
   // changeCardDataList = [...changeCardDataList, ...dataList]
   // console.log(changeCardDataList);
+  console.log(count.value);
+
   cardDataList.value.forEach((item, index: number) => {
     if (index < count.value * 5 && index >= (count.value - 1) * 5) {
       item.status = 1
       item.position = positionList[index % 5]
     }
+    if (count.value > 10) {
+      count.value = 0
+    }
   })
-  console.log(cardDataList);
-
-  // console.log(cardDataList);
 }
 </script>
 
 <template>
-          <div>
+                <div>
+                  <div>{{ cardNum }}</div>
             <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
           </div>
           <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
