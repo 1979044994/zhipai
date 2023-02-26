@@ -96,7 +96,6 @@ createCardPool()
 generateCardData()
 generPosition()
 const deal = (e: any) => {
-
   count.value += 1
   if (cardNum.value < 5) {
     cardDataList.value.forEach((item) => {
@@ -121,9 +120,10 @@ const deal = (e: any) => {
   let tl = gsap.timeline()
 
   cardDataList.value.forEach((item, index: number) => {
-    console.log(count.value);
-
+    console.log(123);
     if (index < count.value * 5 && index >= (count.value - 1) * 5) {
+      console.log(999);
+
       item.status = 1
       switch (index % 5) {
         case 0:
@@ -152,6 +152,8 @@ const deal = (e: any) => {
       count.value = 0
     }
   })
+
+
 }
 </script>
 
