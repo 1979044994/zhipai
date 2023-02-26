@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import type { cardInfo } from './HelloWorld.vue';
 const props = defineProps<{
     id: number, value: cardInfo,
@@ -11,11 +11,6 @@ const props = defineProps<{
     // cardMouseup: Function,
     // cardClick: Function,
 }>()
-
-console.log(11111);
-onMounted(() => {
-    console.log(222);
-})
 
 let newValue: any = undefined
 const img = {
@@ -28,6 +23,8 @@ const img = {
 watch(
     props.value,
     (newValue, oldValue) => {
+        console.log(newValue, oldValue);
+
         if (newValue.position) {
             if (newValue.position.left) {
                 card.value.style.left = `${newValue.position.left}px`;
@@ -36,7 +33,9 @@ watch(
                 card.value.style.top = `${newValue.position.top}px`;
             }
         }
-        showInfo(props.value);
+        console.log(222);
+
+        showInfo(newValue);
     },
     { deep: true }
 )
@@ -52,17 +51,21 @@ nextTick(() => {
             card.value.style.top = `${props.value.position.top}px`;
         }
     }
+    console.log(8888);
+
     showInfo(props.value);
 })
 const valuePreview: any = computed(() => props.value)
 
 
 const showInfo = (value: any) => {
+    console.log(value);
+
     if (value !== undefined) {
         newValue = value;
     }
     let backgroundImage: string;
-    if (valuePreview.value.status === 0 || valuePreview.value.status === 2) {
+    if (value.status === 0 || value.status === 2) {
         backgroundImage = `url(${img.cardBack})`
     } else {
         draw();
@@ -70,7 +73,6 @@ const showInfo = (value: any) => {
     nextTick(() => {
         card._value.style.backgroundImage = backgroundImage;
     })
-
 }
 // /**
 //  * 绘制
