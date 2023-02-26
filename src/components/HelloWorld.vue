@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { gsap } from 'gsap';
 import { computed, reactive, ref } from 'vue';
 import Card from './Card.vue';
 import CardBox from './CardBox.vue';
@@ -117,14 +118,35 @@ const deal = (e: any) => {
   // changeCardDataList = [...changeCardDataList, ...dataList]
   // console.log(changeCardDataList);
   console.log(count.value);
+  let tl = gsap.timeline()
 
   cardDataList.value.forEach((item, index: number) => {
+    console.log(count.value);
 
     if (index < count.value * 5 && index >= (count.value - 1) * 5) {
       item.status = 1
-      item.position = positionList[index % 5]
-      console.log(item);
-
+      switch (index % 5) {
+        case 0:
+          setTimeout(() => {
+            item.position = positionList[index % 5]
+          }, 200)
+        case 1:
+          setTimeout(() => {
+            item.position = positionList[index % 5]
+          }, 400)
+        case 2:
+          setTimeout(() => {
+            item.position = positionList[index % 5]
+          }, 600)
+        case 3:
+          setTimeout(() => {
+            item.position = positionList[index % 5]
+          }, 800)
+        case 4:
+          setTimeout(() => {
+            item.position = positionList[index % 5]
+          }, 1000)
+      }
     }
     if (count.value > 10) {
       count.value = 0

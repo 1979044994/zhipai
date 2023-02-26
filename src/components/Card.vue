@@ -36,7 +36,7 @@ watch(
                 card.value.style.top = `${newValue.position.top}px`;
             }
         }
-        showInfo(newValue); 1
+        showInfo(props.value);
     },
     { deep: true }
 )
@@ -95,8 +95,8 @@ const draw = () => {
     }
     img.decor = new URL(`../assets/card/img/${valuePreview.value.num}_${type}.png`, import.meta.url).href;
     nextTick(() => {
-        card._value.style.repeat = 'no-repeat'
-        card._value.style.backgroundImage = `url(${img.decor})`;
+        card.value.style.repeat = 'no-repeat'
+        card.value.style.backgroundImage = `url(${img.decor})`;
     })
 }
 // const mousedown = (e: any) => {
