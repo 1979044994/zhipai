@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { gsap } from 'gsap';
+import { useDebounceFn } from '@vueuse/core';
 import { computed, reactive, ref } from 'vue';
 import Card from './Card.vue';
 import CardBox from './CardBox.vue';
+import FireWork from './Firework.vue';
+
+
 export interface cardInfo {
   type: number;
   num: number;
@@ -53,14 +56,18 @@ const generateCardData = () => {
 const cardNum = computed(() => {
   let count = 0
   cardDataList.value.forEach((item) => {
-    if (item.position.top === 10) {
+    if (item.position.left === 100) {
       count = count + 1
     }
   })
   return count
 
 })
+const debouncedFn = useDebounceFn((e) => {
+  deal(e)
+}, 1000)
 
+window.addEventListener('resize', debouncedFn)
 
 const generateId = () => {
   return `${new Date().getTime()}&${Math.random()}`
@@ -73,39 +80,25 @@ const createCardPool = (num = 6) => {
     let prop = { id, value: { status: 2 }, position };
     cardPoolList[id] = prop;
   }
-  console.log(cardPoolList);
 
-}
-const createContainer = () => {
-  let space = 10;
-  let cellW = winWidth / containerNum;
-  let containerTop = 180;
-  for (let i = 0; i < containerNum; i++) {
-    let position = {
-      top: containerTop,
-      left: cellW * i + space,
-      width: cellW - space * 2,
-      height: winHeight - containerTop
-    };
-    let id = generateId();
-    let props = { id, position, cardIds: [] };
-    containerList.set([id], { ...props })
-  }
+
 }
 createCardPool()
 generateCardData()
 generPosition()
 const deal = (e: any) => {
+  console.log(111);
+  const dataList = ref<Array<cardInfo>>([])
   count.value += 1
   if (cardNum.value < 5) {
     cardDataList.value.forEach((item) => {
-      if (item.position.top !== 10) {
+      if (item.position.left !== 10) {
         item.position = { left: 100, top: 10, width: '100%', height: '100%' }
         item.status = 2
       }
     })
     cardDataList.value.sort(() => { return Math.random() > 0.5 ? -1 : 1 })
-    console.log(cardDataList.value);
+
   }
   // const dataList = cardDataList.filter((item, index) => {
   //   if (index < count.value * 5 && index >= (count.value - 1) * 5) {
@@ -116,14 +109,11 @@ const deal = (e: any) => {
   // })
   // changeCardDataList = [...changeCardDataList, ...dataList]
   // console.log(changeCardDataList);
-  console.log(count.value);
-  let tl = gsap.timeline()
 
   cardDataList.value.forEach((item, index: number) => {
-    console.log(123);
-    if (index < count.value * 5 && index >= (count.value - 1) * 5) {
-      console.log(999);
 
+    if (index < count.value * 5 && index >= (count.value - 1) * 5) {
+      dataList.value.push(item)
       item.status = 1
       switch (index % 5) {
         case 0:
@@ -147,23 +137,34 @@ const deal = (e: any) => {
             item.position = positionList[index % 5]
           }, 1000)
       }
+    } else if (index < (count.value - 1) * 5 && index >= (count.value - 2) * 5) {
+      item.position = { left: 1200, top: 10, width: '100%', height: '100%' }
     }
     if (count.value > 10) {
       count.value = 0
     }
+
   })
+  if (dataList.value.every((item) => {
+    item.num === dataList.value[0].num
+  })) {
+    console.log(1111);
+
+  }
 
 
 }
+
 </script>
 
 <template>
-    <div>
-      <div>{{ cardNum }}</div>
-      <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
-    </div>
-    <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
-    <button @click="deal($event)">发牌</button>
+  <div>
+    <div>剩余牌数：{{ cardNum }}</div>
+    <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
+  </div>
+<FireWork/>
+  <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
+  <button @click="debouncedFn($event)">发牌</button>
 </template>
 
 <style scoped>

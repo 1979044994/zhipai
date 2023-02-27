@@ -23,8 +23,6 @@ const img = {
 watch(
     props.value,
     (newValue, oldValue) => {
-        console.log(newValue, oldValue);
-
         if (newValue.position) {
             if (newValue.position.left) {
                 card.value.style.left = `${newValue.position.left}px`;
@@ -33,14 +31,10 @@ watch(
                 card.value.style.top = `${newValue.position.top}px`;
             }
         }
-        console.log(222);
-
         showInfo(newValue);
     },
     { deep: true }
 )
-
-
 const card = ref<InstanceType<typeof HTMLElement>>() as any
 nextTick(() => {
     if (props.value.position) {
@@ -51,7 +45,7 @@ nextTick(() => {
             card.value.style.top = `${props.value.position.top}px`;
         }
     }
-    console.log(8888);
+
 
     showInfo(props.value);
 })
@@ -59,8 +53,6 @@ const valuePreview: any = computed(() => props.value)
 
 
 const showInfo = (value: any) => {
-    console.log(value);
-
     if (value !== undefined) {
         newValue = value;
     }
@@ -125,6 +117,6 @@ const draw = () => {
     position: fixed;
     top: 10px;
     z-index: 2;
-    transition: left 1.5s,top 1.5s;
+    transition: left 0.2s, top 0.2s;
 }
 </style>
