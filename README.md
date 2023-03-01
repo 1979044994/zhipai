@@ -15,3 +15,16 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
 # SingleUI
+
+
+## 安装使用
+
+1. git clone 下载本项目
+2. cd 项目目录，执行yarn
+3. 开启开发环境  执行：yarn dev
+4. 打包 执行：yarn build
+
+## 程序详情
+1.点击发牌可以发出五张牌铺在程序中间
+2.当剩余牌小于五张，将会重新洗牌，同时出现特效告知，当五张牌的花色相同也会出现特效
+3.因为动画时间问题，将限制用户连续快速的点击发牌按钮，多次点击在固定时间内只生效一次。
