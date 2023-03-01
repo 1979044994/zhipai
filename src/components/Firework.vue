@@ -1,77 +1,197 @@
 <template>
-  <div id="container">
-    <div id="fireworks"><img src="imgs/fireworks.png" alt=""></div>
-    <div id="firecracker"><img src="imgs/firecracker.png" alt="" width="8px"></div>
-  </div>
+      <header>
+        <div class="orbits">
+          <div class="left">
+            <div class="outer" data-orbit-rotate="right">
+              <img src="../assets/card/img/10_c.png" alt="">
+              <img src="../assets/card/img/10_d.png" alt="">
+              <img src="../assets/card/img/10_h.png" alt="">
+              <img src="../assets/card/img/10_s.png" alt="">
+            </div>
+            <div class="inner" data-orbit-rotate="left">
+              <img src="../assets/card/img/5_c.png" alt="">
+              <img src="../assets/card/img/5_d.png" alt="">
+              <img src="../assets/card/img/5_h.png" alt="">
+              <img src="../assets/card/img/5_s.png" alt="">
+
+            </div>
+          </div>
+          <div class="right">
+            <div class="outer" data-orbit-rotate="left">
+              <img src="../assets/card/img/7_c.png" alt="">
+                <img src="../assets/card/img/7_d.png" alt="">
+                <img src="../assets/card/img/7_h.png" alt="">
+                <img src="../assets/card/img/7_s.png" alt="">
+            </div>
+            <div class="inner" data-orbit-rotate="right">
+              <img src="../assets/card/img/6_c.png" alt="">
+                <img src="../assets/card/img/6_d.png" alt="">
+                <img src="../assets/card/img/6_h.png" alt="">
+                <img src="../assets/card/img/6_s.png" alt="">
+            </div>
+          </div>
+        </div>
+        <div class="content">
+
+          <h1 class="logo"><wbr>同花色<span>洗牌</span></h1>
+          <p>请勿过快点击发牌按钮，在固定时间内发牌仅触发一次</p>
+        </div>
+      </header>
 </template>
 
 <script lang="ts" setup>
+
+
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-}
-
 html {
-  width: 100%;
-  height: 100%;
+  color-scheme: dark
 }
 
 body {
-  width: 100%;
-  height: 100%;
+  padding: 2rem;
+  font-family: system-ui, sans-serif
 }
 
-#container {
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  position: relative;
+/* header */
+header {
+  display: grid;
+  align-items: center;
+  width: min(60rem, 100%);
+  margin-inline: auto;
 }
 
-#fireworks {
-  position: absolute;
-  left: 50%;
-  margin-left: -250px;
-  bottom: 60%;
-  margin-bottom: -180px;
-  transform: scale(0);
-  animation: fireworks 5s 3s;
+header :is(.orbits, .content) {
+  grid-area: 1/1
 }
 
-@keyframes fireworks {
-  0% {
-    transform: scale(0);
+/* content */
+.content {
+  place-self: center;
+  text-align: center;
+  max-width: 90ch
+}
+
+.content>p:nth-of-type(1) {
+  text-transform: uppercase;
+  font-size: 2rem
+}
+
+.content>h1 {
+  font-size: 2.5rem;
+  font-weight: 800
+}
+
+.content>h1>span {
+  color: hsl(350 100% 50%)
+}
+
+.content>p:nth-of-type(2) {
+  font-size: 1.2rem
+}
+
+/* orbits */
+.orbits {
+  --orbit-outer-size: 100%;
+  --orbit-inner-size: 75%;
+  --orbit-image-size: min(4vw, 3rem);
+  --orbit-ring-color: hsl(0 0% 50% / .75);
+  --orbit-ring-thickness: 1px;
+  --orbit-animation-duration: 10s;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  --mask-image: radial-gradient(circle at center, transparent 40%, black 50%);
+  -webkit-mask-image: var(--mask-image);
+  mask-image: var(--mask-image);
+  overflow: hidden;
+  z-index: -1;
+}
+
+.orbits :is(.left, .right, .outer, .inner) {
+  display: grid;
+  aspect-ratio: 1/1
+}
+
+.orbits .left {
+  place-items: center end
+}
+
+.orbits .right {
+  place-items: center start
+}
+
+.orbits :is(.outer, .inner) {
+  grid-area: 1/1;
+  width: calc(var(--width) - var(--orbit-image-size));
+  border: var(--orbit-ring-thickness) solid var(--orbit-ring-color);
+  border-radius: 50%;
+  animation: orbit-rotate var(--orbit-animation-duration) linear infinite;
+}
+
+.orbits .outer {
+  --width: var(--orbit-outer-size)
+}
+
+.orbits .inner {
+  --width: var(--orbit-inner-size)
+}
+
+.orbits [data-orbit-rotate="left"] {
+  --orbit-rotate-to: -360deg
+}
+
+.orbits [data-orbit-rotate="right"] {
+  --orbit-rotate-to: 360deg
+}
+
+.orbits img {
+  grid-area: 1/1;
+  width: var(--orbit-image-size);
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  object-fit: cover;
+  --translate: translateX(var(--tx, 0)) translateY(var(--ty, 0));
+  transform: var(--translate);
+  animation: orbit-image-rotate var(--orbit-animation-duration) linear infinite;
+  place-self: var(--ps)
+}
+
+.orbits img:nth-child(1) {
+  --ps: start center;
+  --ty: -50%
+}
+
+.orbits img:nth-child(2) {
+  --ps: center end;
+  --tx: 50%
+}
+
+.orbits img:nth-child(3) {
+  --ps: end center;
+  --ty: 50%
+}
+
+.orbits img:nth-child(4) {
+  --ps: center start;
+  --tx: -50%
+}
+
+/* .orbits :is(.outer, .inner):hover,
+.orbits :is(.outer, .inner):hover img{
+  animation-play-state: paused;
+} */
+
+@keyframes orbit-rotate {
+  to {
+    transform: rotate(var(--orbit-rotate-to))
   }
-
-  80% {
-    transform: scale(1);
-  }
-
-  100% {
-    opacity: 0;
-  }
 }
 
-#firecracker {
-  position: absolute;
-  left: 50%;
-  bottom: 0%;
-  margin-left: -4px;
-  animation: firecracker 3s forwards;
-}
-
-@keyframes firecracker {
-  0% {
-    transform: scale(1);
-    bottom: 0%;
-  }
-
-  100% {
-    bottom: 60%;
-    transform: scale(0);
+@keyframes orbit-image-rotate {
+  to {
+    transform: var(--translate) rotate(calc(var(--orbit-rotate-to) * -1))
   }
 }
 </style>

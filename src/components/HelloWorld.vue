@@ -3,7 +3,6 @@ import { useDebounceFn } from '@vueuse/core';
 import { computed, reactive, ref } from 'vue';
 import Card from './Card.vue';
 import CardBox from './CardBox.vue';
-import FireWork from './Firework.vue';
 
 
 export interface cardInfo {
@@ -13,25 +12,24 @@ export interface cardInfo {
   status: number
 }
 export interface Position {
-  top: number, left: number, width: string, height: string
+  top: number, left: number | string, width: string, height: string
 }
-const containerNum = 5
+
 const cardPoolPosition = {
   top: 10,
   left: 10
 }
-let winWidth = window.document.body.offsetWidth
-let winHeight = window.document.body.offsetHeight
-const containerList = new Map()
+const props = defineProps<{ changeShow: () => void }>()
 const cardPoolList = reactive<any>({})
-const countCard = ref(52)
+
 const cardDataList = ref<Array<cardInfo>>([])
-let changeCardDataList = reactive<Array<cardInfo>>([])
+
 const positionList = reactive<Array<Position>>([])
+
 const generPosition = () => {
   for (let i = 1; i < 6; i++) {
     let left = i * 200
-    let cardData = { left: left, top: 600, width: '100', height: '160' };
+    let cardData = { left: 150 + left, top: 600, width: '100', height: '160' };
     positionList.push(cardData);
   }
 }
@@ -65,7 +63,7 @@ const cardNum = computed(() => {
 })
 const debouncedFn = useDebounceFn((e) => {
   deal(e)
-}, 1000)
+}, 800)
 
 window.addEventListener('resize', debouncedFn)
 
@@ -148,28 +146,30 @@ const deal = (e: any) => {
   if (dataList.value.every((item) => {
     item.num === dataList.value[0].num
   })) {
-    console.log(1111);
-
+    props.changeShow()
+    setTimeout(() => { props.changeShow() }, 1000)
   }
-
-
 }
 
 </script>
 
 <template>
-  <div>
-    <div>剩余牌数：{{ cardNum }}</div>
-    <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
-  </div>
-<FireWork/>
-  <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
-  <button @click="debouncedFn($event)">发牌</button>
+          <div class="btn">
+            <div>剩余牌数：{{ cardNum }}</div>
+            <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
+            <button @click="debouncedFn($event)">发牌</button>
+          </div>
+          <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
 </template>
 
 <style scoped>
 .read-the-docs {
   color: #888;
+}
 
+.btn{
+  position: absolute;
+  top: 100px;
+  left: 400px;
 }
 </style>
