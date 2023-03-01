@@ -11,16 +11,15 @@ const changeShow = () => {
 </script>
 
 <template>
-      <div>
-        <HelloWorld :changeShow="changeShow"  />
-      </div>
-      <div>
-        <Firework v-if="show" />
-      </div>
+    <div>
+      <HelloWorld :changeShow="changeShow" />
+    </div>
+    <div style="position: fixed;top: 5%;left: 30%; ">
+      <Firework v-if="show" />
+    </div>
 </template>
 
 <style scoped>
-
 .logo {
   height: 6em;
   padding: 1.5em;
