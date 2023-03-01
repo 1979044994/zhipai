@@ -12,7 +12,7 @@ export interface cardInfo {
   status: number
 }
 export interface Position {
-  top: number, left: number | string, width: string, height: string
+  top: number | string, left: number | string, width: string, height: string
 }
 
 const cardPoolPosition = {
@@ -28,8 +28,8 @@ const positionList = reactive<Array<Position>>([])
 
 const generPosition = () => {
   for (let i = 1; i < 6; i++) {
-    let left = i * 200
-    let cardData = { left: 150 + left, top: 600, width: '100', height: '160' };
+    let left = (i - 3) * 200
+    let cardData = { left: `calc(50% + ${left}px)`, top: '50%', width: '100', height: '160' };
     positionList.push(cardData);
   }
 }
@@ -43,7 +43,7 @@ const generateCardData = () => {
 
       //四色
       type = i % 4;
-      let cardData = { type, num: j + 1, position: { left: 100, top: 10, width: '100%', height: '100%' }, status: 2 };
+      let cardData = { type, num: j + 1, position: { left: '100px', top: '10px', width: '100%', height: '100%' }, status: 2 };
       cardDataList.value = [...cardDataList.value, cardData]
       // cardDataList.value.push(cardData);
     }
@@ -54,12 +54,11 @@ const generateCardData = () => {
 const cardNum = computed(() => {
   let count = 0
   cardDataList.value.forEach((item) => {
-    if (item.position.left === 100) {
+    if (item.position.left === '100px') {
       count = count + 1
     }
   })
   return count
-
 })
 const debouncedFn = useDebounceFn((e) => {
   deal(e)
@@ -78,8 +77,6 @@ const createCardPool = (num = 6) => {
     let prop = { id, value: { status: 2 }, position };
     cardPoolList[id] = prop;
   }
-
-
 }
 createCardPool()
 generateCardData()
@@ -91,7 +88,7 @@ const deal = (e: any) => {
   if (cardNum.value < 5) {
     cardDataList.value.forEach((item) => {
       if (item.position.left !== 10) {
-        item.position = { left: 100, top: 10, width: '100%', height: '100%' }
+        item.position = { left: '100px', top: '10px', width: '100%', height: '100%' }
         item.status = 2
       }
     })
@@ -111,32 +108,42 @@ const deal = (e: any) => {
   cardDataList.value.forEach((item, index: number) => {
 
     if (index < count.value * 5 && index >= (count.value - 1) * 5) {
+      if (dataList.value.length > 5) {
+        dataList.value = []
+      }
       dataList.value.push(item)
+      console.log(dataList.value);
+
       item.status = 1
       switch (index % 5) {
         case 0:
           setTimeout(() => {
             item.position = positionList[index % 5]
           }, 200)
+          break;
         case 1:
           setTimeout(() => {
             item.position = positionList[index % 5]
           }, 400)
+          break;
         case 2:
           setTimeout(() => {
             item.position = positionList[index % 5]
           }, 600)
+          break;
         case 3:
           setTimeout(() => {
             item.position = positionList[index % 5]
           }, 800)
+          break;
         case 4:
           setTimeout(() => {
             item.position = positionList[index % 5]
           }, 1000)
+          break;
       }
     } else if (index < (count.value - 1) * 5 && index >= (count.value - 2) * 5) {
-      item.position = { left: 1200, top: 10, width: '100%', height: '100%' }
+      item.position = { left: '1200px', top: '10px', width: '100%', height: '100%' }
     }
     if (count.value > 10) {
       count.value = 0
@@ -144,22 +151,22 @@ const deal = (e: any) => {
 
   })
   if (dataList.value.every((item) => {
-    item.num === dataList.value[0].num
+    return item.num === dataList.value[0].num
   })) {
     props.changeShow()
-    setTimeout(() => { props.changeShow() }, 1000)
+    setTimeout(() => { props.changeShow() }, 2000)
   }
 }
 
 </script>
 
 <template>
-          <div class="btn">
-            <div>剩余牌数：{{ cardNum }}</div>
-            <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
-            <button @click="debouncedFn($event)">发牌</button>
-          </div>
-          <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
+      <div class="btn">
+        <div>剩余牌数：{{ cardNum }}</div>
+        <Card :id="index" :value="item" v-for="(item, index) in cardDataList" :key="index" />
+        <button @click="debouncedFn($event)">发牌</button>
+      </div>
+      <CardBox v-for="(item, index) in positionList" :position=item :id="index" />
 </template>
 
 <style scoped>
@@ -167,7 +174,7 @@ const deal = (e: any) => {
   color: #888;
 }
 
-.btn{
+.btn {
   position: absolute;
   top: 100px;
   left: 400px;

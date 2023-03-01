@@ -25,10 +25,10 @@ watch(
     (newValue, oldValue) => {
         if (newValue.position) {
             if (newValue.position.left) {
-                card.value.style.left = `${newValue.position.left}px`;
+                card.value.style.left = `${newValue.position.left}`;
             }
             if (newValue.position.top) {
-                card.value.style.top = `${newValue.position.top}px`;
+                card.value.style.top = `${newValue.position.top}`;
             }
         }
         showInfo(newValue);
@@ -39,10 +39,10 @@ const card = ref<InstanceType<typeof HTMLElement>>() as any
 nextTick(() => {
     if (props.value.position) {
         if (props.value.position.left) {
-            card.value.style.left = `${props.value.position.left}px`;
+            card.value.style.left = `${props.value.position.left}`;
         }
         if (props.value.position.top) {
-            card.value.style.top = `${props.value.position.top}px`;
+            card.value.style.top = `${props.value.position.top}`;
         }
     }
 

@@ -2,8 +2,8 @@
   <div ref="cardBox" class="cardBox" :style="{
     width: `${position.width}px`,
     height: `${position.height}px`,
-    top: `${position.top}px`,
-    left: `${position.left}px`
+    top: `${position.top}`,
+    left: `${position.left}`
   }"></div>
 </template>
 
