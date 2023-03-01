@@ -15,7 +15,7 @@ const props = defineProps<{
 let newValue: any = undefined
 const img = {
     //背景图
-    cardBack: new URL("../assets/cardBack.png", import.meta.url).href,
+    cardBack: new URL("../assets/cardBack.jpg", import.meta.url).href,
     //花色
     decor: ''
 }
